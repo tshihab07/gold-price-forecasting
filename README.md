@@ -1,0 +1,1 @@
+A machine learning project that predicts gold prices using historical market data and economic indicators.
