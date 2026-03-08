@@ -1,0 +1,5 @@
+Feature,Same_Day_Correlation,Max_Correlation_0_to_10,Lag_of_Max_Correlation(idx),Lag1_Correlation
+SPX_Return,-0.0129,-0.0659,2,0.0559
+USO_Return,0.2339,0.2339,0,-0.0214
+SLV_Return,0.8066,0.8066,0,-0.052
+EURUSD_Return,0.1727,0.1727,0,0.0595
