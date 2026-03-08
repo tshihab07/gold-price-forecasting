@@ -10,3 +10,4 @@ model_RandomForest.ipynb
 model_SelectionAndAnalysis.ipynb
 model_SupportVectorClassifier.ipynb
 model_XGBoost.ipynb
+FeatureEngineeringSample.py
