@@ -1,0 +1,53 @@
+{
+    "created_at": "2026-03-10T01:25:07.238073",
+    "target_column": "GLD_Return",
+    "base_features": [
+        "SPX_Return",
+        "USO_Return",
+        "SLV_Return",
+        "EURUSD_Return"
+    ],
+    "engineered_features": [
+        "SPX_Return_lag1",
+        "SPX_Return_lag2",
+        "SPX_Return_lag3",
+        "SPX_Return_lag4",
+        "SPX_Return_lag5",
+        "USO_Return_lag1",
+        "USO_Return_lag2",
+        "USO_Return_lag3",
+        "USO_Return_lag4",
+        "USO_Return_lag5",
+        "SLV_Return_lag1",
+        "SLV_Return_lag2",
+        "SLV_Return_lag3",
+        "SLV_Return_lag4",
+        "SLV_Return_lag5",
+        "EURUSD_Return_lag1",
+        "EURUSD_Return_lag2",
+        "EURUSD_Return_lag3",
+        "EURUSD_Return_lag4",
+        "EURUSD_Return_lag5",
+        "GLD_Return_lag1",
+        "GLD_Return_lag2",
+        "GLD_Return_lag3",
+        "GLD_Return_lag4",
+        "GLD_Return_lag5"
+    ],
+    "lag_range": [
+        1,
+        2,
+        3,
+        4,
+        5
+    ],
+    "target_shift": -1,
+    "train_samples": 1826,
+    "test_samples": 457,
+    "date_range": {
+        "train_start": "2008-01-10T00:00:00",
+        "train_end": "2016-04-13T00:00:00",
+        "test_start": "2016-04-14T00:00:00",
+        "test_end": "2018-05-14T00:00:00"
+    }
+}
