@@ -2,13 +2,5 @@
 .env
 __pycache__
 *.pyc
-dataPreparation.ipynb
-model_LightGBM.ipynb
-model_logisticRegression.ipynb
-model_NeuralNetwork.ipynb
-model_RandomForest.ipynb
-model_SelectionAndAnalysis.ipynb
-model_SupportVectorClassifier.ipynb
-model_XGBoost.ipynb
 FeatureEngineeringSample.py
 dev_notes.md
