@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import joblib
-from sklearn.model_selection import TimeSeriesSplit
+from sklearn.model_selection import TimeSeriesSplit, KFold
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import cross_validate
 import warnings
@@ -209,34 +209,41 @@ class ModelPersister:
 class DataHandler:
     
     @staticmethod
-    def load_dataset(file_path):
-        """Load CSV and return df, X, y (with 'OutletSales' as target)."""
+    def load_dataset(file_path, target_col):
+        """Load CSV and return df, x, y"""
         df = pd.read_csv(file_path)
-        X = df.drop(columns=['OutletSales'], errors='ignore')
-        y = df['OutletSales']
-        return df, X, y
+        x = df.drop(columns=[target_col], errors='ignore')
+        y = df[target_col]
+        
+        return df, x, y
     
 
     @staticmethod
-    def load_artifacts(artifacts_dir, cv_required=True):
+    def load_artifacts(ARTIFACTS_DIR, cv_method, test_size=None, gap=0):
         """Load x_train, x_test, y_train, y_test, [cv]."""
-        artifacts_dir = Path(artifacts_dir)
+        ARTIFACTS_DIR = Path(ARTIFACTS_DIR)
         artifacts = {
-            'x_train': joblib.load(artifacts_dir / "x_train.pkl"),
-            'x_test': joblib.load(artifacts_dir / "x_test.pkl"),
-            'y_train': joblib.load(artifacts_dir / "y_train.pkl"),
-            'y_test': joblib.load(artifacts_dir / "y_test.pkl")
+            'x_train': joblib.load(ARTIFACTS_DIR / "x_train.pkl"),
+            'x_test': joblib.load(ARTIFACTS_DIR / "x_test.pkl"),
+            'y_train': joblib.load(ARTIFACTS_DIR / "y_train.pkl"),
+            'y_test': joblib.load(ARTIFACTS_DIR / "y_test.pkl")
         }
 
-        if cv_required:
+        if cv_method == 'kfcv':
             try:
-                artifacts['cv'] = joblib.load(artifacts_dir / "cv.pkl")
+                artifacts['cv'] = joblib.load(ARTIFACTS_DIR / "cv.pkl")
             
             except FileNotFoundError:
-                print("⚠️ Warning: cv.pkl not found. Using default 5-Fold CV.")
-                from sklearn.model_selection import KFold
                 artifacts['cv'] = KFold(n_splits=5, shuffle=True, random_state=42)
         
+        elif cv_method == "tscv":
+            try:
+                artifacts['cv'] = joblib.load(ARTIFACTS_DIR / "cv.pkl")
+            
+            except FileNotFoundError:
+                artifacts['cv'] = TimeSeriesSplit(n_splits=5, test_size=test_size, gap=gap)
+
+
         return artifacts
     
 
@@ -277,138 +284,3 @@ class DataHandler:
         cat_indices = [x_train_cb.columns.get_loc(c) for c in cat_features] if cat_features else None
         
         return x_train_cb, x_test_cb, cat_features, cat_indices
-
-# Time Series Split for forecasting models and Create TimeSeriesSplit cross-validator
-class TimeSeriesSplit:
-    
-    @staticmethod
-    def create_timeseries_cv(n_splits=5, test_size=None, gap=0):
-        return TimeSeriesSplit(n_splits=n_splits, test_size=test_size, gap=gap)
-    
-    
-    # Create sequences for LSTM/RNN models
-    @staticmethod
-    def create_sequences(X, y, sequence_length):
-        X_array = X.values if hasattr(X, 'values') else X
-        y_array = y.values if hasattr(y, 'values') else y
-        
-        X_seq, y_seq = [], []
-        
-        for i in range(len(X_array) - sequence_length):
-            X_seq.append(X_array[i:i + sequence_length])
-            y_seq.append(y_array[i + sequence_length])
-        
-        return np.array(X_seq), np.array(y_seq)
-    
-    
-    @staticmethod
-    def directional_accuracy(y_true, y_pred):
-        y_true = np.array(y_true)
-        y_pred = np.array(y_pred)
-        
-        # if positive return, 0 if negative
-        true_direction = np.sign(y_true)
-        pred_direction = np.sign(y_pred)
-        
-        # accuracy
-        accuracy = np.mean(true_direction == pred_direction)
-        
-        return accuracy * 100  # return as percentage
-    
-    # Calculate financial performance metrics.
-    @staticmethod
-    def calculate_financial_metrics(y_true, y_pred, risk_free_rate=0.02/252):
-        y_true = np.array(y_true)
-        y_pred = np.array(y_pred)
-        
-        # strategy returns
-        positions = np.sign(y_pred)
-        strategy_returns = positions[:-1] * y_true[1:]  # Shift to align
-        
-        # remove NaN
-        strategy_returns = strategy_returns[~np.isnan(strategy_returns)]
-        
-        if len(strategy_returns) == 0 or np.std(strategy_returns) == 0:
-            return {
-                'Sharpe Ratio': 0.0,
-                'Sortino Ratio': 0.0,
-                'Max Drawdown': 0.0,
-                'Total Return': 0.0
-            }
-        
-        # harpe Ratio
-        excess_returns = strategy_returns - risk_free_rate
-        sharpe = np.mean(excess_returns) / np.std(strategy_returns) * np.sqrt(252)
-        
-        # Sortino Ratio
-        downside_returns = strategy_returns[strategy_returns < 0]
-        if len(downside_returns) > 0:
-            downside_std = np.std(downside_returns)
-            sortino = np.mean(excess_returns) / downside_std * np.sqrt(252)
-        else:
-            sortino = 0.0
-        
-        # Maximum Drawdown
-        cumulative_returns = np.cumprod(1 + strategy_returns)
-        rolling_max = np.maximum.accumulate(cumulative_returns)
-        drawdown = (cumulative_returns - rolling_max) / rolling_max
-        max_drawdown = np.min(drawdown)
-        
-        # Total Return
-        total_return = (cumulative_returns[-1] - 1) * 100
-        
-        return {
-            'Sharpe Ratio': round(sharpe, 4),
-            'Sortino Ratio': round(sortino, 4),
-            'Max Drawdown': round(max_drawdown * 100, 4),
-            'Total Return (%)': round(total_return, 4)
-        }
-    
-    
-    @staticmethod
-    def plot_residual_diagnostics(y_true, y_pred, title="Residual Diagnostics"):
-        """
-        Create residual diagnostic plots.
-        """
-        import matplotlib.pyplot as plt
-        import seaborn as sns
-        from scipy import stats
-        
-        residuals = y_true - y_pred
-        
-        fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-        
-        # Residuals vs Predicted
-        axes[0, 0].scatter(y_pred, residuals, alpha=0.5, s=10)
-        axes[0, 0].axhline(0, color='red', linestyle='--')
-        axes[0, 0].set_xlabel('Predicted Values')
-        axes[0, 0].set_ylabel('Residuals')
-        axes[0, 0].set_title('Residuals vs Predicted')
-        axes[0, 0].grid(True, alpha=0.3)
-        
-        # Residual Distribution
-        sns.histplot(residuals, kde=True, ax=axes[0, 1], bins=30)
-        axes[0, 1].axvline(0, color='red', linestyle='--')
-        axes[0, 1].set_title('Residual Distribution')
-        axes[0, 1].set_xlabel('Residual')
-        
-        # Q-Q Plot
-        stats.probplot(residuals, dist="norm", plot=axes[1, 0])
-        axes[1, 0].set_title('Q-Q Plot of Residuals')
-        
-        # Residuals Over Time (if index is datetime)
-        if hasattr(y_true, 'index') and isinstance(y_true.index, pd.DatetimeIndex):
-            axes[1, 1].plot(y_true.index, residuals, linewidth=0.5)
-            axes[1, 1].axhline(0, color='red', linestyle='--')
-            axes[1, 1].set_title('Residuals Over Time')
-            axes[1, 1].set_xlabel('Date')
-        else:
-            axes[1, 1].plot(residuals, linewidth=0.5)
-            axes[1, 1].axhline(0, color='red', linestyle='--')
-            axes[1, 1].set_title('Residuals Over Index')
-        
-        plt.suptitle(title, fontsize=14, fontweight='bold', y=1.02)
-        plt.tight_layout()
-        plt.show()
-        
-        return residuals
