@@ -279,7 +279,7 @@ class DataHandler:
         return x_train_cb, x_test_cb, cat_features, cat_indices
 
 # Time Series Split for forecasting models and Create TimeSeriesSplit cross-validator
-class TimeSeriesUtils:
+class TimeSeriesSplit:
     
     @staticmethod
     def create_timeseries_cv(n_splits=5, test_size=None, gap=0):
