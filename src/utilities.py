@@ -38,10 +38,78 @@ class Evaluator:
     
 
     @staticmethod
+    def directional_accuracy(y_true, y_pred):
+        y_true = np.array(y_true)
+        y_pred = np.array(y_pred)
+        
+        # if positive return, 0 if negative
+        true_direction = np.sign(y_true)
+        pred_direction = np.sign(y_pred)
+        
+        # accuracy
+        accuracy = np.mean(true_direction == pred_direction)
+        
+        # return as percentage
+        return accuracy * 100
+    
+
+    @staticmethod
+    def financial_metrics(model_name, y_true, y_pred, risk_free_rate=0.02/252):
+        y_true = np.array(y_true)
+        y_pred = np.array(y_pred)
+        
+        # strategy returns using predictions to take positions
+        # long if predicted return > 0, short if < 0
+        positions = np.sign(y_pred)
+        strategy_returns = positions[:-1] * y_true[1:]  # Shift to align
+        
+        # remove NaN
+        strategy_returns = strategy_returns[~np.isnan(strategy_returns)]
+        
+        if len(strategy_returns) == 0 or np.std(strategy_returns) == 0:
+            return pd.DataFrame({
+                'Model': [model_name],
+                'Sharpe Ratio': [0.0],
+                'Sortino Ratio': [0.0],
+                'Max Drawdown': [0.0],
+                'Total Return': [0.0]
+            })
+        
+        # sharpe Ratio
+        excess_returns = strategy_returns - risk_free_rate
+        sharpe = np.mean(excess_returns) / np.std(strategy_returns) * np.sqrt(252)
+        
+        # sortino Ratio (downside deviation)
+        downside_returns = strategy_returns[strategy_returns < 0]
+        if len(downside_returns) > 0:
+            downside_std = np.std(downside_returns)
+            sortino = np.mean(excess_returns) / downside_std * np.sqrt(252)
+        else:
+            sortino = 0.0
+        
+        # maximum Drawdown
+        cumulative_returns = np.cumprod(1 + strategy_returns)
+        rolling_max = np.maximum.accumulate(cumulative_returns)
+        drawdown = (cumulative_returns - rolling_max) / rolling_max
+        max_drawdown = np.min(drawdown)
+        
+        # total Return
+        total_return = (cumulative_returns[-1] - 1) * 100
+        
+        return pd.DataFrame({
+            'Model': [model_name],
+            'Sharpe Ratio': [round(sharpe, 4)],
+            'Sortino Ratio': [round(sortino, 4)],
+            'Max Drawdown': [round(max_drawdown * 100, 4)],
+            'Total Return (%)': [round(total_return, 4)]
+        })
+    
+
+    @staticmethod
     def performance_table(train_metrics, test_metrics):
         """Return DataFrame: Metrics | Training | Test """
         perf_df = pd.DataFrame({
-            'Metrics': ['MSE', 'MAE', 'RMSE', 'R2 Score', 'MAPE'],
+            'Metrics': ['MSE', 'MAE', 'RMSE', 'R2 Score', 'MAPE', 'Directional Accuracy (%)'],
             'Training': train_metrics,
             'Test': test_metrics
         }).round(4)
@@ -148,8 +216,8 @@ class ModelPersister:
     def __init__(self, model_name, artifacts_root="../artifacts"):
         self.model_name = model_name
         self.artifacts_root = Path(artifacts_root)
-        self.model_dir = self.artifacts_root / "models"
-        self.performance_dir = self.artifacts_root / "model-performance"
+        self.model_dir = self.artifacts_root / "Models"
+        self.performance_dir = self.artifacts_root / "ModelPerformance"
         
         # Create directories
         self.model_dir.mkdir(parents=True, exist_ok=True)
@@ -175,8 +243,8 @@ class ModelPersister:
     
 
     # append model's summary metrics to the shared performance file
-    def aggregated_performance(self, df):
-        path = self.performance_dir / "a_ModelPerformance.csv"
+    def aggregated_performance(self, df, name):
+        path = self.performance_dir / f"{name}.csv"
         
         # append or create
         if path.exists():
