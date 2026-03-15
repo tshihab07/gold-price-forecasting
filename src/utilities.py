@@ -118,63 +118,68 @@ class Evaluator:
     
 
     @staticmethod
-    def summary_builder(model_names, cv_df, test_metrics):
-        """ Overall Model Performance (CV + Test) — Merged """
+    def summary_builder(model_names, cv_df, test_metrics, test_dir_acc=None):
         test_df = pd.DataFrame({
             "Model": model_names,
             "Test MSE": [m[0] for m in test_metrics],
             "Test MAE": [m[1] for m in test_metrics],
             "Test RMSE": [m[2] for m in test_metrics],
             "Test R2": [m[3] for m in test_metrics],
-            "Test MAPE": [m[4] for m in test_metrics]
+            "Test MAPE": [m[4] for m in test_metrics],
+            "Test Directional Accuracy (%)": test_dir_acc if test_dir_acc else [0.0] * len(model_names)
         })
 
         merged = pd.merge(cv_df, test_df, on="Model", how="inner")
+
+        # select columns in logical order
         return merged[[
             "Model",
-            "CV MSE", "CV MAE", "CV RMSE", "CV R2", "CV MAPE",
-            "Test MSE", "Test MAE", "Test RMSE", "Test R2", "Test MAPE"
+            "CV MSE", "CV MAE", "CV RMSE", "CV R2", "CV MAPE", "CV Directional Accuracy (%)",
+            "Test MSE", "Test MAE", "Test RMSE", "Test R2", "Test MAPE", "Test Directional Accuracy (%)"
         ]].round(4)
 
 
     @staticmethod
     def cv_evaluate(model, X, y, cv, scoring=None):
-        """Run cross-validation and return dict of average CV metrics (MSE, MAE, RMSE, R2, MAPE)."""
+        """Run cross-validation and return dict of average CV metrics including Directional Accuracy."""
         if scoring is None:
             scoring = ['neg_mean_squared_error', 'neg_mean_absolute_error', 'r2']
-        
+
         # standard metrics via cross_validate
         cv_results = cross_validate(
             model, X, y, cv=cv, scoring=scoring, n_jobs=-1, return_train_score=False
         )
-        
+
         cv_mse = -cv_results['test_neg_mean_squared_error'].mean()
         cv_mae = -cv_results['test_neg_mean_absolute_error'].mean()
         cv_rmse = np.sqrt(cv_mse)
         cv_r2 = cv_results['test_r2'].mean()
-        
-        # MAPE: custom loop
+
+        # MAPE and directional accuracy
         mape_scores = []
+        dir_acc_scores = []
+
         for train_idx, val_idx in cv.split(X, y):
             model_clone = model
             try:
                 model_clone.fit(X.iloc[train_idx], y.iloc[train_idx])
                 y_pred = model_clone.predict(X.iloc[val_idx])
-            
+
             except Exception:
-                # fallback: use original model fit if stateful
                 y_pred = model.predict(X.iloc[val_idx])
-           
+
             mape_scores.append(Evaluator.safe_mape(y.iloc[val_idx], y_pred))
-        
+            dir_acc_scores.append(Evaluator.directional_accuracy(y.iloc[val_idx], y_pred))
+
         cv_mape = np.mean(mape_scores)
-        
+        cv_dir_acc = np.mean(dir_acc_scores)
         return {
             'CV MSE': cv_mse,
             'CV MAE': cv_mae,
             'CV RMSE': cv_rmse,
             'CV R2': cv_r2,
-            'CV MAPE': cv_mape
+            'CV MAPE': cv_mape,
+            'CV Directional Accuracy (%)': cv_dir_acc
         }
 
 
