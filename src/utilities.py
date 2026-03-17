@@ -218,38 +218,38 @@ class Evaluator:
 # Handles saving models, performance summaries, and aggregated performance results to organized directories
 class ModelPersister:
     
-    def __init__(self, model_name, artifacts_root="../artifacts"):
+    def __init__(self, model_name, model_root, performance_root):
         self.model_name = model_name
-        self.artifacts_root = Path(artifacts_root)
-        self.model_dir = self.artifacts_root / "Models"
-        self.performance_dir = self.artifacts_root / "ModelPerformance"
+        self.MODEL_DIR = model_root
+        self.PERFORMANCE_DIR = performance_root
         
         # Create directories
-        self.model_dir.mkdir(parents=True, exist_ok=True)
-        self.performance_dir.mkdir(parents=True, exist_ok=True)
+        self.MODEL_DIR.mkdir(parents=True, exist_ok=True)
+        self.PERFORMANCE_DIR.mkdir(parents=True, exist_ok=True)
     
 
     # save the trained model in appropriate format
     def save_model(self, model):
-        joblib.dump(model, self.model_dir / f"model_{self.model_name.title()}.pkl")
+        joblib.dump(model, self.MODEL_DIR / f"{self.model_name}_model.pkl")
         
-        print(f"Model saved: {self.model_dir}/{self.model_name.lower()}.pkl")
+        print(f"Model saved: {self.MODEL_DIR}/{self.model_name.lower()}.pkl")
 
     # save full train/test/CV metrics
     def save_performance(self, performance_df, tag=""):
         if tag:
-            filename = f"{self.model_name.lower()}{tag}.csv"
-        else:
-            filename = f"{self.model_name.lower()}Performance.csv"
+            filename = f"{self.model_name}_{tag}.csv"
         
-        path = self.performance_dir / filename
+        else:
+            filename = f"{self.model_name}_OverallPerformance.csv"
+        
+        path = self.PERFORMANCE_DIR / filename
         performance_df.to_csv(path, index=False)
         print(f"{self.model_name} performance saved: {path}")
     
 
     # append model's summary metrics to the shared performance file
     def aggregated_performance(self, df, name):
-        path = self.performance_dir / f"{name}.csv"
+        path = self.PERFORMANCE_DIR / f"{name}.csv"
         
         # append or create
         if path.exists():
@@ -265,7 +265,7 @@ class ModelPersister:
 
     # append model's overfitting metrics to the shared overfitting file
     def append_overfitting(self, df):
-        path = self.performance_dir / "a_overfittingAnalysis.csv"
+        path = self.PERFORMANCE_DIR / "AllModel_OverfittingAnalysis.csv"
         
         if path.exists():
             overfit_df = pd.read_csv(path)                          # open previous loaded data
@@ -292,9 +292,9 @@ class DataHandler:
     
 
     @staticmethod
-    def load_artifacts(ARTIFACTS_DIR, cv_method, test_size=None, gap=0):
+    def load_artifacts(artifacts_root, cv_method, test_size=None, gap=0):
         """Load x_train, x_test, y_train, y_test, [cv]."""
-        ARTIFACTS_DIR = Path(ARTIFACTS_DIR)
+        ARTIFACTS_DIR = Path(artifacts_root)
         artifacts = {
             'x_train': joblib.load(ARTIFACTS_DIR / "x_train.pkl"),
             'x_test': joblib.load(ARTIFACTS_DIR / "x_test.pkl"),
