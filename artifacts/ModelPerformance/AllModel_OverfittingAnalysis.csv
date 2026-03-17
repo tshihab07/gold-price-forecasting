@@ -1,0 +1,4 @@
+Model,CV RMSE,CV R2,CV Dir Acc (%),Test RMSE,Test R2,Test Dir Acc (%),R2 Gap,RMSE Ratio,Dir Acc Gap (%),Overfitting Status,Model Status (Generalization)
+XGBoost (Baseline),0.0134,-0.2977,47.6316,0.0087,-0.1548,47.9212,-0.1429,0.6493,0.2896,Mild,Poor
+XGBoost (Optuna),0.0118,-0.0046,52.3684,0.0081,-0.0001,51.2035,-0.0045,0.6864,-1.1649,Mild,Poor
+XGBoost (RandomSearchCV),0.0118,-0.0048,52.3684,0.0081,-0.0002,51.2035,-0.0046,0.6864,-1.1649,Mild,Poor
