@@ -1,5 +1,4 @@
 {
-    "created_at": "2026-03-12T01:18:22.042847",
     "target_column": "GLD_Return",
     "base_features": [
         "SPX_Return",
@@ -8,6 +7,10 @@
         "EURUSD_Return"
     ],
     "engineered_features": [
+        "SPX_Return",
+        "USO_Return",
+        "SLV_Return",
+        "EURUSD_Return",
         "SPX_Return_lag1",
         "SPX_Return_lag2",
         "SPX_Return_lag3",
@@ -32,7 +35,10 @@
         "GLD_Return_lag2",
         "GLD_Return_lag3",
         "GLD_Return_lag4",
-        "GLD_Return_lag5"
+        "GLD_Return_lag5",
+        "rolling_mean",
+        "rolling_std",
+        "momentum"
     ],
     "lag_range": [
         1,
