@@ -5,6 +5,7 @@ import joblib
 from sklearn.model_selection import TimeSeriesSplit, KFold
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import cross_validate
+from sklearn.base import clone
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -58,10 +59,17 @@ class Evaluator:
         y_true = np.array(y_true)
         y_pred = np.array(y_pred)
         
-        # strategy returns using predictions to take positions
-        # long if predicted return > 0, short if < 0
+        # feature engineering already aligns target (T+1) with features (T). Shifting again would compare prediction (T+1) vs actual (T+2).
         positions = np.sign(y_pred)
-        strategy_returns = positions[:-1] * y_true[1:]  # Shift to align
+        y_true = y_true[:len(positions)]        # enforce alignment explicitly
+        
+        # apply transaction costs based on position changes to simulate realistic trading returns
+        transaction_cost = 0.0005
+
+        position_change = np.abs(np.diff(positions, prepend=0))
+        costs = position_change * transaction_cost
+
+        strategy_returns = positions * y_true - costs
         
         # remove NaN
         strategy_returns = strategy_returns[~np.isnan(strategy_returns)]
@@ -75,15 +83,17 @@ class Evaluator:
                 'Total Return': [0.0]
             })
         
-        # sharpe Ratio
+        # sharpe ratio
         excess_returns = strategy_returns - risk_free_rate
         sharpe = np.mean(excess_returns) / np.std(strategy_returns) * np.sqrt(252)
         
-        # sortino Ratio (downside deviation)
+        # sortino ratio (downside deviation)
         downside_returns = strategy_returns[strategy_returns < 0]
+        
         if len(downside_returns) > 0:
             downside_std = np.std(downside_returns)
             sortino = np.mean(excess_returns) / downside_std * np.sqrt(252)
+        
         else:
             sortino = 0.0
         
@@ -140,14 +150,14 @@ class Evaluator:
 
 
     @staticmethod
-    def cv_evaluate(model, X, y, cv, scoring=None):
+    def cv_evaluate(model, x, y, cv, scoring=None):
         """Run cross-validation and return dict of average CV metrics including Directional Accuracy."""
         if scoring is None:
             scoring = ['neg_mean_squared_error', 'neg_mean_absolute_error', 'r2']
 
         # standard metrics via cross_validate
         cv_results = cross_validate(
-            model, X, y, cv=cv, scoring=scoring, n_jobs=-1, return_train_score=False
+            model, x, y, cv=cv, scoring=scoring, n_jobs=-1, return_train_score=False
         )
 
         cv_mse = -cv_results['test_neg_mean_squared_error'].mean()
@@ -159,20 +169,21 @@ class Evaluator:
         mape_scores = []
         dir_acc_scores = []
 
-        for train_idx, val_idx in cv.split(X, y):
-            model_clone = model
+        for train_idx, val_idx in cv.split(x, y):
+            model_clone = clone(model)
             try:
-                model_clone.fit(X.iloc[train_idx], y.iloc[train_idx])
-                y_pred = model_clone.predict(X.iloc[val_idx])
+                model_clone.fit(x.iloc[train_idx], y.iloc[train_idx])
+                y_pred = model_clone.predict(x.iloc[val_idx])
 
-            except Exception:
-                y_pred = model.predict(X.iloc[val_idx])
+            except Exception as e:
+                raise RuntimeError(f"Model failed during CV: {e}")
 
             mape_scores.append(Evaluator.safe_mape(y.iloc[val_idx], y_pred))
             dir_acc_scores.append(Evaluator.directional_accuracy(y.iloc[val_idx], y_pred))
 
         cv_mape = np.mean(mape_scores)
         cv_dir_acc = np.mean(dir_acc_scores)
+        
         return {
             'CV MSE': cv_mse,
             'CV MAE': cv_mae,
