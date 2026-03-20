@@ -2,8 +2,4 @@
 .env
 __pycache__
 *.pyc
-FeatureEngineeringSample.py
-dev_notes.md
-debug.py
-testUtils.py
-BugReports
+DevNotes
