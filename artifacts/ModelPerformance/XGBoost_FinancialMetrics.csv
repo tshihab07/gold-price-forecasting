@@ -1,4 +1,4 @@
 Model,Sharpe Ratio,Sortino Ratio,Max Drawdown,Total Return (%)
-XGBoost (Baseline),-1.0071,-1.473,-30.2781,-19.2226
-XGBoost (Optuna),0.0806,0.1311,-17.6019,4.08
-XGBoost (RandomSearchCV),0.0806,0.1311,-17.6019,4.08
+XGBoost (Baseline),-1.8415,-2.6413,-37.767,-33.6179
+XGBoost (Optuna),0.101,0.1642,-17.6019,4.5879
+XGBoost (RandomSearchCV),0.101,0.1642,-17.6019,4.5879
