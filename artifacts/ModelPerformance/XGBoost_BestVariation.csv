@@ -1,18 +1,18 @@
 Metrics,Value
-Model,XGBoost (Optuna)
+Model,XGBoost (RandomSearchCV)
 CV MSE,0.0001
 CV MAE,0.0083
 CV RMSE,0.0118
-CV R2,-0.0046
-CV MAPE,12007.4762
+CV R2,-0.004
+CV MAPE,14139.5961
 CV Directional Accuracy (%),52.3684
 Test MSE,0.0001
 Test MAE,0.006
 Test RMSE,0.0081
 Test R2,-0.0001
-Test MAPE,9118.2591
+Test MAPE,8508.8884
 Test Directional Accuracy (%),51.2035
-R2 Gap,-0.0045
+R2 Gap,-0.0039
 RMSE Ratio,0.6864
 Dir Acc Gap (%),-1.1649
 Overfitting Status,Mild
