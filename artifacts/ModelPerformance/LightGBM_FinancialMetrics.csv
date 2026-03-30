@@ -1,0 +1,4 @@
+Model,Sharpe Ratio,Sortino Ratio,Max Drawdown,Total Return (%)
+LightGBM (Baseline),-1.408,-2.0366,-32.9434,-26.6162
+LightGBM (Optuna),-0.6738,-1.0496,-22.1184,-12.7071
+LightGBM (RandomSearchCV),0.01,0.0162,-12.7717,2.3954
