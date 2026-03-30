@@ -1,0 +1,19 @@
+Metrics,Value
+Model,LightGBM (RandomSearchCV)
+CV MSE,0.0001
+CV MAE,0.0083
+CV RMSE,0.0118
+CV R2,-0.0051
+CV MAPE,12742.0942
+CV Directional Accuracy (%),52.3026
+Test MSE,0.0001
+Test MAE,0.006
+Test RMSE,0.0081
+Test R2,-0.0015
+Test MAPE,5051.7624
+Test Directional Accuracy (%),50.9847
+R2 Gap,-0.0036
+RMSE Ratio,0.6864
+Dir Acc Gap (%),-1.3179
+Overfitting Status,Mild
+Model Status (Generalization),Poor
