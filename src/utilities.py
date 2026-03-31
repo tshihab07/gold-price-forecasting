@@ -9,6 +9,9 @@ from sklearn.base import clone
 import warnings
 warnings.filterwarnings("ignore")
 
+import optuna
+import catboost as cb
+
 
 # unified metric calculation, train/test/CV comparison, and overfitting diagnosis
 class Evaluator:
@@ -243,7 +246,7 @@ class ModelPersister:
     def save_model(self, model):
         joblib.dump(model, self.MODEL_DIR / f"{self.model_name}_model.pkl")
         
-        print(f"Model saved: {self.MODEL_DIR}/{self.model_name.lower()}.pkl")
+        print(f"Model saved: {self.model_name}_model.pkl")
 
     # save full train/test/CV metrics
     def save_performance(self, performance_df, tag=""):
@@ -255,7 +258,7 @@ class ModelPersister:
         
         path = self.PERFORMANCE_DIR / filename
         performance_df.to_csv(path, index=False)
-        print(f"{self.model_name} performance saved: {path}")
+        print(f"performance saved: {self.model_name}")
     
 
     # append model's summary metrics to the shared performance file
@@ -271,7 +274,7 @@ class ModelPersister:
         else:
             df.to_csv(path, index=False)
         
-        print(f"Appended to aggregated performance: {path}")
+        print(f"Appended to aggregated performance!")
     
 
     # append model's overfitting metrics to the shared overfitting file
@@ -286,7 +289,7 @@ class ModelPersister:
         else:
             df.to_csv(path, index=False)
         
-        print(f"Appended to overfitting analysis: {path}")
+        print(f"Appended to overfitting analysis!")
 
 
 # loading/splitting workflow
@@ -368,3 +371,36 @@ class DataHandler:
         cat_indices = [x_train_cb.columns.get_loc(c) for c in cat_features] if cat_features else None
         
         return x_train_cb, x_test_cb, cat_features, cat_indices
+
+
+# Optuna Pruning Callback for CatBoost
+class CatBoostPruningCallback:
+    """Reports intermediate RMSE to Optuna for early trial pruning."""
+    
+    def __init__(self, trial):
+        self.trial = trial
+    
+    def after_iteration(self, info):
+        try:
+            # info.eval_results contains validation metrics per iteration
+            evals = info.eval_results
+            
+            if evals:
+                # get the last validation metric value
+                val_data = evals.get('validation', evals.get('learn', {}))
+                if val_data:
+                    metric_name = list(val_data.keys())[0]
+                    current_score = val_data[metric_name][-1]
+                    
+                    self.trial.report(current_score, info.iteration)
+                    
+                    if self.trial.should_prune():
+                        raise optuna.TrialPruned()
+        
+        except optuna.TrialPruned:
+            raise  # re-raise TrialPruned — Optuna needs to catch this
+        
+        except Exception:
+            pass  # silently skip if eval data isn't available yet
+        
+        return True
