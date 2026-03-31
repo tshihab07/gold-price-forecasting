@@ -1,19 +1,19 @@
 Metrics,Value
-Model,LightGBM (RandomSearchCV)
-CV MSE,0.0001
-CV MAE,0.0083
-CV RMSE,0.0118
-CV R2,-0.0051
-CV MAPE,12742.0942
-CV Directional Accuracy (%),52.3026
+Model,LightGBM (Optuna)
+CV MSE,0.0002
+CV MAE,0.0093
+CV RMSE,0.0129
+CV R2,-0.1934
+CV MAPE,111962.4241
+CV Directional Accuracy (%),53.4211
 Test MSE,0.0001
 Test MAE,0.006
 Test RMSE,0.0081
-Test R2,-0.0015
-Test MAPE,5051.7624
-Test Directional Accuracy (%),50.9847
-R2 Gap,-0.0036
-RMSE Ratio,0.6864
-Dir Acc Gap (%),-1.3179
+Test R2,0.0016
+Test MAPE,16306.2398
+Test Directional Accuracy (%),51.6411
+R2 Gap,-0.195
+RMSE Ratio,0.6279
+Dir Acc Gap (%),-1.78
 Overfitting Status,Mild
 Model Status (Generalization),Poor
