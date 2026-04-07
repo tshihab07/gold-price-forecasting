@@ -1,0 +1,4 @@
+Model,Sharpe Ratio,Sortino Ratio,Max Drawdown,Total Return (%)
+CatBoost (Baseline),0.0187,0.0347,-14.1984,2.6074
+CatBoost (Optuna),0.3632,0.6086,-10.9739,11.1651
+CatBoost (RandomSearchCV),-0.8286,-1.3101,-20.8284,-15.9136
