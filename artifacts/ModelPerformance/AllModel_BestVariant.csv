@@ -1,3 +1,4 @@
 Model,CV MSE,CV MAE,CV RMSE,CV R2,CV MAPE,CV Directional Accuracy (%),Test MSE,Test MAE,Test RMSE,Test R2,Test MAPE,Test Directional Accuracy (%),R2 Gap,RMSE Ratio,Dir Acc Gap (%),Overfitting Status,Model Status (Generalization)
 XGBoost (RandomSearchCV),0.0001,0.0083,0.0118,-0.004,14139.5961,52.3684,0.0001,0.006,0.0081,-0.0001,8508.8884,51.2035,-0.0039,0.6864,-1.1649,Mild,Poor
 LightGBM (Optuna),0.0002,0.0093,0.0129,-0.1934,111962.4241,53.4211,0.0001,0.006,0.0081,0.0016,16306.2398,51.6411,-0.195,0.6279,-1.78,Mild,Poor
+CatBoost (Optuna),0.0002,0.0088,0.0123,-0.0958,84317.379,51.3158,0.0001,0.006,0.0081,0.0115,11508.0825,52.2976,-0.1073,0.6585,0.9818,Mild,Poor
