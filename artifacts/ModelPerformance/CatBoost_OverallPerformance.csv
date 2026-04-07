@@ -1,0 +1,4 @@
+Model,CV MSE,CV MAE,CV RMSE,CV R2,CV MAPE,CV Directional Accuracy (%),Test MSE,Test MAE,Test RMSE,Test R2,Test MAPE,Test Directional Accuracy (%),R2 Gap,RMSE Ratio,Dir Acc Gap (%),Overfitting Status,Model Status (Generalization)
+CatBoost (Optuna),0.0002,0.0088,0.0123,-0.0958,84317.379,51.3158,0.0001,0.006,0.0081,0.0115,11508.0825,52.2976,-0.1073,0.6585,0.9818,Mild,Poor
+CatBoost (Baseline),0.0002,0.0091,0.0127,-0.1679,63035.5723,50.5263,0.0001,0.006,0.0081,0.0024,8865.7085,49.6718,-0.1703,0.6378,-0.8545,Mild,Poor
+CatBoost (RandomSearchCV),0.0001,0.0087,0.0122,-0.0686,51041.2248,51.9079,0.0001,0.006,0.0081,0.0014,9643.8462,49.453,-0.07,0.6639,-2.4549,Mild,Poor
