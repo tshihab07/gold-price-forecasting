@@ -244,7 +244,12 @@ class ModelPersister:
 
     # save the trained model in appropriate format
     def save_model(self, model):
-        joblib.dump(model, self.MODEL_DIR / f"{self.model_name}_model.pkl")
+
+        if self.model_name.lower() == "lstm":
+            model.save(self.MODEL_DIR / f"{self.model_name}_model.keras")
+        
+        else:
+            joblib.dump(model, self.MODEL_DIR / f"{self.model_name}_model.pkl")
         
         print(f"Model saved: {self.model_name}_model.pkl")
 
