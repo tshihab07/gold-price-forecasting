@@ -409,3 +409,59 @@ class CatBoostPruningCallback:
             pass  # silently skip if eval data isn't available yet
         
         return True
+
+
+# Experiment Tracker for LSTM modeling
+class ExperimentTracker:
+    """Track, compare and export hyperparameter tuning experiments."""
+
+    def __init__(self, sort_by="test_RMSE", ascending=True):
+        self.results = pd.DataFrame()
+        self.sort_by = sort_by
+        self.ascending = ascending
+
+    
+    def log(self, result: dict) -> pd.DataFrame:
+        """Append an experiment result and return the sorted tracker table."""
+        row = pd.DataFrame([result])
+        self.results = pd.concat([self.results, row], ignore_index=True)
+        
+        return self.display()
+
+    
+    def display(self) -> pd.DataFrame:
+        """Show the tracker sorted by the configured metric."""
+        return self.results.sort_values(self.sort_by, ascending=self.ascending).reset_index(drop=True)
+
+    
+    def get_best(self, metric=None) -> pd.Series:
+        """Return the best experiment row for a given metric."""
+        metric = metric or self.sort_by
+        ascending = self.ascending if metric == self.sort_by else True
+        return self.results.loc[self.results[metric].idxmin()]
+
+    
+    def get_best_value(self, metric) -> pd.Series:
+        """Return the best value for a specific metric."""
+        return self.results[metric].min()
+
+    
+    def compare(self, exp_a: str, exp_b: str, metrics: list = None) -> pd.DataFrame:
+        """Side-by-side comparison of two experiments."""
+        metrics = metrics or ["test_MSE", "test_MAE", "test_RMSE","test_R2", "test_Dir_Acc"]
+        
+        row_a = self.results[self.results["experiment"] == exp_a].iloc[0]
+        row_b = self.results[self.results["experiment"] == exp_b].iloc[0]
+        
+        return pd.DataFrame({
+            exp_a: [row_a[m] for m in metrics],
+            exp_b: [row_b[m] for m in metrics],
+            "delta": [row_b[m] - row_a[m] for m in metrics],
+        }, index=metrics)
+
+
+    def summary(self, metric="test_RMSE"):
+        """Print a quick summary of all experiments for a metric."""
+        df = self.results[["experiment", metric]].sort_values(metric, ascending=True).reset_index(drop=True)
+        
+        return df
