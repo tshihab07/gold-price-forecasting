@@ -247,11 +247,11 @@ class ModelPersister:
 
         if self.model_name.lower() == "lstm":
             model.save(self.MODEL_DIR / f"{self.model_name}_model.keras")
+            print(f"Model saved: {self.model_name}_model.keras")
         
         else:
             joblib.dump(model, self.MODEL_DIR / f"{self.model_name}_model.pkl")
-        
-        print(f"Model saved: {self.model_name}_model.pkl")
+            print(f"Model saved: {self.model_name}_model.pkl")
 
     # save full train/test/CV metrics
     def save_performance(self, performance_df, tag=""):
