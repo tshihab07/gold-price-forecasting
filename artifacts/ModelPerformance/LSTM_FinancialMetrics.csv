@@ -1,0 +1,4 @@
+Model,Sharpe Ratio,Sortino Ratio,Max Drawdown,Total Return (%)
+LSTM (Baseline),0.2371,0.3323,-14699932098202.598,-100.0
+LSTM (Manual Tuning),0.1395,0.2025,-100.0,-100.0
+LSTM (Randomized Search),0.3397,0.5428,-1418647.2777,-100.0
