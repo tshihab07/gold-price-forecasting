@@ -8,3 +8,6 @@ LightGBM (RandomSearchCV),0.01,0.0162,-12.7717,2.3954
 CatBoost (Baseline),0.0187,0.0347,-14.1984,2.6074
 CatBoost (Optuna),0.3632,0.6086,-10.9739,11.1651
 CatBoost (RandomSearchCV),-0.8286,-1.3101,-20.8284,-15.9136
+LSTM (Baseline),0.2371,0.3323,-1.46999E+13,-100
+LSTM (Manual Tuning),0.1395,0.2025,-100,-100
+LSTM (Randomized Search),0.3397,0.5428,-1418647.278,-100
