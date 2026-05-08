@@ -1,0 +1,19 @@
+Metrics,Value
+Model,LSTM (Manual Tuning)
+CV MSE,0.0001
+CV MAE,0.0083
+CV RMSE,0.0118
+CV R2,-0.0175
+CV MAPE,53213.3991
+CV Directional Accuracy (%),52.9197
+Test MSE,0.3287
+Test MAE,0.4239
+Test RMSE,0.5733
+Test R2,-0.0003
+Test MAPE,100.1285
+Test Directional Accuracy (%),49.6756
+R2 Gap,-0.0172
+RMSE Ratio,48.5847
+Dir Acc Gap (%),-3.2441
+Overfitting Status,High
+Model Status (Generalization),Poor
