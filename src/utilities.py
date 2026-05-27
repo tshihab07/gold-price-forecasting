@@ -7,6 +7,9 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import cross_validate
 from sklearn.base import clone
 import warnings
+from prophet.serialize import model_to_json, model_from_json
+import json
+
 warnings.filterwarnings("ignore")
 
 import optuna
@@ -249,9 +252,28 @@ class ModelPersister:
             model.save(self.MODEL_DIR / f"{self.model_name}_model.keras")
             print(f"Model saved: {self.model_name}_model.keras")
         
+        elif self.model_name.lower() == "prophet":
+            # Prophet models are serialized using JSON
+            model_json = model_to_json(model)
+            save_path = self.MODEL_DIR / f"{self.model_name}_model.json"
+            
+            with open(save_path, "w") as f:
+                json.dump(model_json, f)
+            
+            print(f"Model saved: {self.model_name}_model.json")
+        
         else:
             joblib.dump(model, self.MODEL_DIR / f"{self.model_name}_model.pkl")
             print(f"Model saved: {self.model_name}_model.pkl")
+    
+    # Load a Prophet model from JSON
+    @staticmethod
+    def load_prophet_model(model_path):
+        with open(model_path, 'r') as file:
+            model_json = json.load(file)
+        
+        return model_from_json(model_json)
+
 
     # save full train/test/CV metrics
     def save_performance(self, performance_df, tag=""):
@@ -378,6 +400,24 @@ class DataHandler:
         return x_train_cb, x_test_cb, cat_features, cat_indices
 
 
+    # prepare data for prophet format
+    @staticmethod
+    def prepare_for_prophet(x_data, y_data, date_col='Date'):
+        prophet_df = x_data.copy()
+        prophet_df['y'] = y_data.values
+
+        # rename date column to ds (prophet required column name)
+        prophet_df = prophet_df.rename(columns={date_col: 'ds'})
+        
+        prophet_df['ds'] = pd.to_datetime(prophet_df['ds'])
+
+        # reorder columns: ds, y, regressor
+        regressor_cols = [col for col in prophet_df.columns if col not in ['ds', 'y']]
+        prophet_df = prophet_df[['ds', 'y'] + regressor_cols]
+
+        return prophet_df
+
+
 # Optuna Pruning Callback for CatBoost
 class CatBoostPruningCallback:
     """Reports intermediate RMSE to Optuna for early trial pruning."""
@@ -412,6 +452,7 @@ class CatBoostPruningCallback:
 
 
 # Experiment Tracker for LSTM modeling
+# UPDATED: Class docstring changed from LSTM-only to model-agnostic
 class ExperimentTracker:
     """Track, compare and export hyperparameter tuning experiments."""
 
