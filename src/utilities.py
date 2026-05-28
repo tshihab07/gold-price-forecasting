@@ -402,19 +402,22 @@ class DataHandler:
 
     # prepare data for prophet format
     @staticmethod
-    def prepare_for_prophet(x_data, y_data, date_col='Date'):
-        prophet_df = x_data.copy()
-        prophet_df['y'] = y_data.values
-
-        # rename date column to ds (prophet required column name)
-        prophet_df = prophet_df.rename(columns={date_col: 'ds'})
-        
+    def prepare_prophet_df(df, target_col='target', date_col='Date'):
+        prophet_df = df.copy()
+    
+        # Rename columns to Prophet's expected names
+        prophet_df = prophet_df.rename(columns={date_col: 'ds', target_col: 'y'})
         prophet_df['ds'] = pd.to_datetime(prophet_df['ds'])
-
-        # reorder columns: ds, y, regressor
-        regressor_cols = [col for col in prophet_df.columns if col not in ['ds', 'y']]
+    
+        # Drop rows where ds or y is missing
+        prophet_df = prophet_df.dropna(subset=['ds', 'y'])
+    
+        # Identify regressors (everything except ds and y)
+        regressor_cols = [c for c in prophet_df.columns if c not in ['ds', 'y']]
+    
+        # Reorder columns: ds, y, then regressors
         prophet_df = prophet_df[['ds', 'y'] + regressor_cols]
-
+    
         return prophet_df
 
 
