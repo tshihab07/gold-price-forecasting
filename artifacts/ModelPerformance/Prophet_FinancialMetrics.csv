@@ -1,0 +1,4 @@
+Model,Sharpe Ratio,Sortino Ratio,Max Drawdown,Total Return (%)
+Prophet (Baseline),0.9381,1.2852,-15.6379,27.0766
+Prophet (ChangePoint),-0.016,-0.0227,-13.1703,1.7409
+Prophet (GridSearch),0.0786,0.1107,-13.7644,4.0284
