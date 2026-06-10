@@ -1,0 +1,4 @@
+Model,CV MSE,CV MAE,CV RMSE,CV R2,CV MAPE,CV Directional Accuracy (%),Test MSE,Test MAE,Test RMSE,Test R2,Test MAPE,Test Directional Accuracy (%),R2 Gap,RMSE Ratio,Dir Acc Gap (%),Overfitting Status,Model Status (Generalization)
+Prophet (ChangePoint),0.0001,0.008,0.0112,-0.0572,24627.6569,50.6316,0.0001,0.006,0.0081,0.0043,11852.9633,51.2035,-0.0615,0.7232,0.5719,Mild,Poor
+Prophet (GridSearch),0.0001,0.0081,0.0113,-0.0956,40253.4662,49.8947,0.0001,0.006,0.0081,0.0039,10473.1597,50.9847,-0.0995,0.7168,1.09,Mild,Poor
+Prophet (Baseline),0.0001,0.0079,0.011,-0.0426,49692.208,53.1579,0.0001,0.006,0.0081,0.0001,2531.0104,54.9234,-0.0427,0.7364,1.7655,Mild,Poor
