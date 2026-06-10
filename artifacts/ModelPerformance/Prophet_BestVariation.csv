@@ -1,0 +1,19 @@
+Metrics,Value
+Model,Prophet (ChangePoint)
+CV MSE,0.0001
+CV MAE,0.008
+CV RMSE,0.0112
+CV R2,-0.0572
+CV MAPE,24627.6569
+CV Directional Accuracy (%),50.6316
+Test MSE,0.0001
+Test MAE,0.006
+Test RMSE,0.0081
+Test R2,0.0043
+Test MAPE,11852.9633
+Test Directional Accuracy (%),51.2035
+R2 Gap,-0.0615
+RMSE Ratio,0.7232
+Dir Acc Gap (%),0.5719
+Overfitting Status,Mild
+Model Status (Generalization),Poor
