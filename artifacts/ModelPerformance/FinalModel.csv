@@ -1,0 +1,26 @@
+Metrics,Value
+Final Rank,1
+Model,CatBoost (Optuna)
+CV MSE,0.0002
+CV MAE,0.0088
+CV RMSE,0.0123
+CV R2,-0.0958
+CV MAPE,84317.379
+CV Directional Accuracy (%),51.3158
+Test MSE,0.0001
+Test MAE,0.006
+Test RMSE,0.0081
+Test R2,0.0115
+Test MAPE,11508.0825
+Test Directional Accuracy (%),52.2976
+R2 Gap,-0.1073
+RMSE Ratio,0.6585
+Dir Acc Gap (%),0.9818
+Overfitting Status,Mild
+Model Status (Generalization),Poor
+Abs Dir Acc Gap,0.9818
+Norm_Test_Directional_Accuracy_(),1.0
+Norm_Test_RMSE,1.0
+Norm_RMSE_Ratio,0.9993619257331599
+Norm_Abs_Dir_Acc_Gap,0.8466057929795673
+Composite Score,0.976895157806909
