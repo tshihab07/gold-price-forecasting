@@ -8,7 +8,7 @@ try:
     from ..utils.logger import get_logger
     from ..utils.validators import validate_market_data, ValidationError
 
-except ImportError:  # pragma: no cover - supports running as a top-level module
+except ImportError:
     from app.config import ASSETS, BASE_FEATURES, TARGET_COLUMN
     from app.utils.logger import get_logger
     from app.utils.validators import validate_market_data, ValidationError
