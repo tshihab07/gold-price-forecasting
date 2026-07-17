@@ -15,8 +15,6 @@
 - [Project Overview](#-project-overview)
   - [Key Highlights](#key-highlights)
   - [Business Value](#business-value)
-- [Architecture & System Design](#-architecture--system-design)
-  - [High-Level System Architecture](#high-level-system-architecture)
 - [Data Flow Diagram](#-data-flow-diagram)
 - [Model Training Workflow](#-model-training-workflow)
   - [Optimization Techniques Used](#optimization-techniques-used)
@@ -62,11 +60,10 @@
   - [Getting Started](#getting-started)
   - [Contribution Guidelines](#contribution-guidelines)
   - [Development Workflow](#development-workflow)
-  - [Reporting Issues](#reporting-issues)
-- [License](#-license)
 - [Acknowledgments](#-acknowledgments)
   - [Libraries & Frameworks](#libraries--frameworks)
   - [Data Sources](#data-sources)
+- [License](#-license)
 
 ---
 
@@ -93,69 +90,6 @@ The **Gold Price Forecasting System** is an end-to-end machine learning pipeline
 - **Trading Strategy**: Systematic signal generation for quantitative strategies
 - **Real-time Inference**: Sub-100ms latency for high-frequency decision making
 - **Production Ready**: Full CI/CD, monitoring, containerization, and testing
-
----
-
-## Architecture & System Design
-
-### High-Level System Architecture
-
-```mermaid
-graph TB
-    subgraph "External Data Sources"
-        YF[yfinance API<br/>GLD, SPX, USO, SLV, EURUSD]
-    end
-    
-    subgraph "Data Layer"
-        RAW[Raw Price Data<br/>data/price_data.csv]
-        ENG[Engineered Features<br/>31 Features + Target]
-        ART[Artifacts<br/>Train/Test Splits + Manifest]
-    end
-    
-    subgraph "Model Development"
-        NB[Jupyter Notebooks<br/>5 Model Families]
-        OPT[Optimization<br/>Optuna / RandomSearchCV]
-        EVAL[Evaluation<br/>CV + Test + Financial Metrics]
-        SEL[Model Selection<br/>Composite Scoring]
-    end
-    
-    subgraph "Production System"
-        API[FastAPI Application<br/>7 REST Endpoints]
-        FE[Feature Engineer<br/>Real-time 31 Features]
-        DI[Data Ingestion<br/>Live Market Data]
-        PRED[Predictor Service<br/>CatBoost Model]
-        VAL[Validators<br/>Input/Output Validation]
-        LOG[Structured Logging<br/>JSON + Metrics]
-    end
-    
-    subgraph "Deployment"
-        DOCKER[Docker Container]
-        RENDER[Render / Heroku / Railway]
-        SYSTEMD[Systemd Service]
-        K8S[Kubernetes Ready]
-    end
-    
-    YF --> RAW
-    RAW --> ENG
-    ENG --> ART
-    ART --> NB
-    NB --> OPT
-    OPT --> EVAL
-    EVAL --> SEL
-    SEL --> PRED
-    PRED --> API
-    DI --> FE
-    FE --> PRED
-    API --> VAL
-    API --> LOG
-    PRED --> LOG
-    DI --> LOG
-    FE --> LOG
-    API --> DOCKER
-    DOCKER --> RENDER
-    DOCKER --> SYSTEMD
-    DOCKER --> K8S
-```
 
 ---
 
@@ -1043,19 +977,6 @@ gitgraph
     merge develop tag: "v1.1.0"
 ```
 
-### Reporting Issues
-
-Use GitHub Issues with:
-- **Bug Reports**: Steps to reproduce, expected vs actual, logs
-- **Feature Requests**: Use case, proposed API, acceptance criteria
-- **Performance**: Benchmarks, profiling data, environment details
-
----
-
-## License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
 ---
 
 ## Acknowledgments
@@ -1072,23 +993,13 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### Data Sources
 - **Yahoo Finance** - Historical price data for GLD, SPX, USO, SLV, EURUSD
+- **Kaggle** - Each model is trained using the [Gold Price Data](https://www.kaggle.com/datasets/altruistdelhite04/gold-price-data) dataset collected from kaggle.
 
 ---
 
-## Project Status
+## License
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  ✅ Data Pipeline          │  ✅ Feature Engineering        │
-│  ✅ Model Training (15)    │  ✅ Hyperparameter Optimization │
-│  ✅ Model Evaluation       │  ✅ Financial Metrics          │
-│  ✅ Overfitting Analysis   │  ✅ Model Selection            │
-│  ✅ Production API         │  ✅ Real-time Inference        │
-│  ✅ Validation & Testing   │  ✅ Docker/Cloud Deployment    │
-│  ✅ Documentation          │  ✅ Monitoring & Logging       │
-└─────────────────────────────────────────────────────────────┘
-                        PRODUCTION READY 
-```
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
