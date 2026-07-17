@@ -9,7 +9,8 @@ try:
     from ..config import MODEL_PATH, FEATURE_ORDER, get_best_model_path
     from ..utils.logger import get_logger
     from ..utils.validators import validate_features, validate_prediction_output, ValidationError
-except ImportError:  # pragma: no cover - supports running as a top-level module
+
+except ImportError:
     from app.config import MODEL_PATH, FEATURE_ORDER, get_best_model_path
     from app.utils.logger import get_logger
     from app.utils.validators import validate_features, validate_prediction_output, ValidationError
@@ -33,7 +34,6 @@ class GoldPricePredictor:
     
 
     def _load_model(self) -> None:
-        """Load model from disk."""
         if not self.model_path.exists():
             raise FileNotFoundError(f"Model file not found: {self.model_path}")
         
