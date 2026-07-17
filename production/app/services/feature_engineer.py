@@ -5,10 +5,7 @@ import numpy as np
 from datetime import datetime
 
 try:
-    from ..config import (
-        LAG_RANGE, ROLLING_WINDOW, MOMENTUM_WINDOW, BASE_FEATURES, TARGET_COLUMN,
-        FEATURE_ORDER
-    )
+    from ..config import LAG_RANGE, ROLLING_WINDOW, MOMENTUM_WINDOW, BASE_FEATURES, TARGET_COLUMN, FEATURE_ORDER
     from ..utils.logger import get_logger
     from ..utils.validators import validate_features, ValidationError
 
