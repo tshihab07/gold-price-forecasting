@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forecasting Result</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link rel="stylesheet" href="/static/css/forecast.css">
+</head>
+<body>
+  <div class="page">
+    <div class="forecast-hero">
+      <strong><h1>Gold Price Forecasting</h1></strong>
+      <p>This forecasting view combines the trained machine learning model with historical gold market data to deliver a professional and easy-to-read outlook for the next step in trend movement.</p>
+      <div class="hero-actions">
+        <a class="btn btn-ghost" href="/">← Back to Overview</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Forecast Summary</h2>
+          <span class="model-badge"><strong>Model:</strong> {{ model_name }}</span>
+        </div>
+        <p class="card-subtitle">
+          The latest model prediction indicates a <strong>{{ direction }}</strong> movement with a confidence score of <strong>{{ "%.2f"|format(confidence * 100) }}%</strong>.
+        </p>
+
+        <div class="price-grid">
+          <div class="price-item">
+            <span class="label">Last Price</span>
+            <span class="value">${{ "%.2f"|format(latest_price) }}</span>
+          </div>
+          <div class="price-item">
+            <span class="label">Projected Price</span>
+            <span class="value projected">${{ "%.2f"|format(projected_price) }}</span>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Direction</span>
+            <span class="stat-value">
+              <span class="pill {% if direction == 'UP' %}pill-up{% else %}pill-down{% endif %}">{{ direction }}</span>
+            </span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Confidence</span>
+            <span class="stat-value">{{ "%.1f"|format(confidence * 100) }}%</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Predicted Return</span>
+            <span class="stat-value">{{ "%.4f"|format(predicted_return * 100) }}%</span>
+          </div>
+        </div>
+
+        <div class="confidence-bar">
+          <div class="confidence-bar-fill" style="width: {{ confidence * 100 }}%"></div>
+        </div>
+
+        <div class="last-updated">
+          Updated: {{ timestamp }}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">Trend Visualization</h2>
+        </div>
+        <p class="card-subtitle">The chart below shows the recent historical gold price trend alongside the model-based projection for the next step.</p>
+        <div class="chart-container">
+          {{ chart_svg|safe }}
+        </div>
+      </div>
+    </div>
+
+    <div class="card info-card">
+      <div class="card-header">
+        <h2 class="card-title">What This Page Shows</h2>
+      </div>
+      <ul>
+        <li>Historical gold price movement over the recent period (last 60 days).</li>
+        <li>A model-based projected value built from the trained forecasting pipeline.</li>
+        <li>A clear signal for the predicted direction and confidence level.</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      © 2026 <a href="https://tusharshihab.vercel.app/" target="_blank">Md. Tushar Shihab</a>, Data Analyst and ML Engineer. All rights reserved.
+    </div>
+  </div>
+  <script src="/static/js/chart.js"></script>
+</body>
+</html>
