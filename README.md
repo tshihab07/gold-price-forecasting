@@ -1032,7 +1032,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 E-mail: tushar.shihab13@gmail.com <br>
 LinkedIn: [Tushar Shihab](https://www.linkedin.com/in/tshihab07/)<br>
-Website: [Tushar Shihab](tusharshihab.vercel.app)
+Website: [Tushar Shihab](tusharshihab.vercel.app)<br>
 More Projects: 👉🏿 [Projects](https://github.com/tshihab07?tab=repositories)
 
 <div align="center">
