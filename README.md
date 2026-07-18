@@ -3,10 +3,34 @@
 > **Production-Grade Machine Learning Pipeline for Gold Price Direction Prediction**  
 > Built with CatBoost, LightGBM, XGBoost, LSTM & Prophet | Deployed via FastAPI
 
-[![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-009688.svg)](https://fastapi.tiangolo.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+![Gold Price Forecasting Summary](img/ForecastSummary.png)
+
+[![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
+[![NumPy](https://img.shields.io/badge/NumPy-2.4.6-013243?logo=numpy&logoColor=white)]()
+[![Pandas](https://img.shields.io/badge/Pandas-3.0.3-150458?logo=pandas&logoColor=white)]()
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-3.11.0-11557C?logo=plotly&logoColor=white)]()
+[![Seaborn](https://img.shields.io/badge/Seaborn-0.13.2-4C72B0?logo=python&logoColor=white)]()
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.9.0-F7931E?logo=scikitlearn&logoColor=white)]()
+[![SciPy](https://img.shields.io/badge/SciPy-1.18.0-8CAAE6?logo=scipy&logoColor=white)]()
+[![XGBoost](https://img.shields.io/badge/XGBoost-3.3.0-0066CC?logo=apache&logoColor=white)]()
+[![CatBoost](https://img.shields.io/badge/CatBoost-1.2.10-FFCC00?logo=cat&logoColor=black)]()
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21.0-FF6F00?logo=tensorflow&logoColor=white)]()
+[![Keras](https://img.shields.io/badge/Keras-3.15.0-D00000?logo=keras&logoColor=white)]()
+[![LightGBM](https://img.shields.io/badge/LightGBM-4.6.0-9ACD32?logo=lightgbm&logoColor=white)]()
+[![Prophet](https://img.shields.io/badge/Prophet-1.3.0-3F51B5?logo=meta&logoColor=white)]()
+[![Optuna](https://img.shields.io/badge/Optuna-4.9.0-005AF0?logo=python&logoColor=white)]()
+[![SHAP](https://img.shields.io/badge/SHAP-0.52.0-FF4088?logo=python&logoColor=white)]()
+[![Joblib](https://img.shields.io/badge/Joblib-1.5.3-009688?logo=python&logoColor=white)]()
+[![Cython](https://img.shields.io/badge/Cython-3.2.8-3776AB?logo=python&logoColor=white)]()
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688?logo=fastapi&logoColor=white)]()
+[![Uvicorn](https://img.shields.io/badge/Uvicorn-0.24.0-499848?logo=uvicorn&logoColor=white)]()
+[![Pydantic](https://img.shields.io/badge/Pydantic-2.5.0-E92063?logo=pydantic&logoColor=white)]()
+[![Pydantic Settings](https://img.shields.io/badge/Pydantic_Settings-2.1.0-E92063?logo=pydantic&logoColor=white)]()
+[![Jinja2](https://img.shields.io/badge/Jinja2-3.1.2-B41717?logo=jinja&logoColor=white)]()
+[![yfinance](https://img.shields.io/badge/yfinance-0.2.32-006400?logo=yahoo&logoColor=white)]()
+[![Requests](https://img.shields.io/badge/Requests-2.31.0-2D6DB3?logo=python&logoColor=white)]()
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
