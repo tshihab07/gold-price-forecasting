@@ -55,7 +55,7 @@
   - [Overfitting Analysis](#overfitting-analysis)
 - [Installation Guide](#-installation-guide)
   - [Prerequisites](#prerequisites)
-  - [ependencies](#dependencies)
+  - [Dependencies](#dependencies)
   - [Windows Installation](#windows-installation)
   - [Linux / macOS Installation](#linux--macos-installation)
 - [Running the Application](#-running-the-application)
@@ -88,6 +88,7 @@
   - [Libraries & Frameworks](#libraries--frameworks)
   - [Data Sources](#data-sources)
 - [License](#-license)
+- [Contact](#contact)
 
 ---
 
@@ -1017,7 +1018,7 @@ gitgraph
 
 ### Data Sources
 - **Yahoo Finance** - Historical price data for GLD, SPX, USO, SLV, EURUSD
-- **Kaggle** - Each model is trained using the [Gold Price Data](https://www.kaggle.com/datasets/altruistdelhite04/gold-price-data) dataset collected from kaggle.
+- **Kaggle** - Each model is trained using the [Gold Price Data](https://www.kaggle.com/datasets/altruistdelhite04/gold-price-data) collected from kaggle.
 
 ---
 
@@ -1026,6 +1027,13 @@ gitgraph
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
+
+## Contact
+
+E-mail: tushar.shihab13@gmail.com <br>
+LinkedIn: [Tushar Shihab](https://www.linkedin.com/in/tshihab07/)<br>
+Website: [Tushar Shihab](tusharshihab.vercel.app)
+More Projects: 👉🏿 [Projects](https://github.com/tshihab07?tab=repositories)
 
 <div align="center">
 
